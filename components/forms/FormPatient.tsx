@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import {useRouter} from "next/navigation";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {createUser} from "@/lib/actions/patient.actions";
 import {Form} from "@/components/ui/form";
 import {FormField, FormFieldType} from "@/components/FormField";
 import {FormButton} from "@/components/ButtonSubmit";
@@ -39,9 +40,10 @@ export function FormPatient() {
       if (user) {
         router.push(`/patients/${user.$id}/register`);
       }
-
-      console.log("values: ", values);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
