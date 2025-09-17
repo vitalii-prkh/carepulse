@@ -21,7 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning={process.env.NODE_ENV === "development"}
+    >
       <body
         className={cn(
           "min-h-screen",
