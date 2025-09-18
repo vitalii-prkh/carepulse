@@ -5,18 +5,16 @@ import {useForm} from "react-hook-form";
 import {useRouter} from "next/navigation";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {formPatientSchema} from "@/lib/validation";
 import {createUser} from "@/lib/actions/patient.actions";
 import {Form} from "@/components/ui/form";
 import {FormField, FormFieldType} from "@/components/FormField";
 import {FormButton} from "@/components/ButtonSubmit";
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.email("Invalid email address"),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+const formSchema = formPatientSchema.pick({
+  name: true,
+  email: true,
+  phone: true,
 });
 
 export function FormPatient() {
