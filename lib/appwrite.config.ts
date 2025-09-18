@@ -4,16 +4,16 @@ export const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
 
 export const API_KEY = process.env.NEXT_PUBLIC_APPWRITE_API_KEY!;
 
-export const DATABASE_ID = process.env.DATABASE_ID ?? "";
+export const DATABASE_ID = process.env.DATABASE_ID!;
 
-export const PATIENT_COLLECTION_ID = process.env.PATIENT_COLLECTION_ID ?? "";
+export const PATIENT_COLLECTION_ID = process.env.PATIENT_COLLECTION_ID!;
 
 export const DOCTOR_COLLECTION_ID = process.env.DOCTOR_COLLECTION_ID ?? "";
 
 export const APPOINTMENT_COLLECTION_ID =
   process.env.APPOINTMENT_COLLECTION_ID ?? "";
 
-export const BUCKED_ID = process.env.NEXT_PUBLIC_BUCKED_ID ?? "";
+export const BUCKED_ID = process.env.NEXT_PUBLIC_BUCKED_ID!;
 
 export const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!;
 
