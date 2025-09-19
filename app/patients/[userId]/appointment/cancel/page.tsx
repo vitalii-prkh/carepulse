@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {getPatient} from "@/lib/actions/patient.actions";
-import {FormAppointmentCreate} from "@/components/forms/FormAppointmentCreate";
+import {FormAppointmentCancel} from "@/components/forms/FormAppointmentCancel";
 
 async function PageAppointmentCreate(props: {
   params: Promise<{userId: string}>;
@@ -19,8 +19,7 @@ async function PageAppointmentCreate(props: {
             height={1000}
             className="mb-12 h-10 w-fit"
           />
-          <FormAppointmentCreate
-            type="schedule"
+          <FormAppointmentCancel
             userId={params.userId}
             patientId={patient.$id}
           />
