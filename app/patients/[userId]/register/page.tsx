@@ -2,7 +2,7 @@ import Image from "next/image";
 import {FormRegister} from "@/components/forms/FormRegister";
 import {getUser} from "@/lib/actions/patient.actions";
 
-async function Page(props: {params: Promise<{userId: string}>}) {
+async function PageRegistration(props: {params: Promise<{userId: string}>}) {
   const params = await props.params;
   const user = await getUser(params.userId);
 
@@ -35,4 +35,4 @@ async function Page(props: {params: Promise<{userId: string}>}) {
   );
 }
 
-export default Page;
+export default PageRegistration;

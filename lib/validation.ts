@@ -51,9 +51,9 @@ export const formPatientSchema = z.object({
   }),
 });
 
-export const CreateAppointmentSchema = z.object({
+export const formApptCreateSchema = z.object({
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
-  schedule: z.coerce.date(),
+  schedule: z.string(),
   reason: z
     .string()
     .min(2, "Reason must be at least 2 characters")
@@ -80,14 +80,3 @@ export const CancelAppointmentSchema = z.object({
     .min(2, "Reason must be at least 2 characters")
     .max(500, "Reason must be at most 500 characters"),
 });
-
-export function getAppointmentSchema(type: string) {
-  switch (type) {
-    case "create":
-      return CreateAppointmentSchema;
-    case "cancel":
-      return CancelAppointmentSchema;
-    default:
-      return ScheduleAppointmentSchema;
-  }
-}

@@ -72,7 +72,7 @@ export function FormRegister(props: {user: User}) {
       const patient = await registerPatient(patientData);
 
       if (patient) {
-        router.push(`/patients/${props.user.$id}/new-appointment`);
+        router.push(`/patients/${props.user.$id}/appointment/create`);
       }
     } catch (error) {
     } finally {

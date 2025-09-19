@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {FormPatient} from "@/components/forms/FormPatient";
 
-function Home() {
+function PageHome() {
   return (
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container my-auto">
@@ -40,4 +40,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default PageHome;
