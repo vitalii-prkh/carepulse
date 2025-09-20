@@ -7,8 +7,9 @@ import {
   DATABASE_ID,
   databases,
   tablesDB,
+  messaging,
 } from "@/lib/appwrite.config";
-import {parseStringify} from "@/lib/utils";
+import {formatDateTime, parseStringify} from "@/lib/utils";
 
 export async function createAppointment(data: CreateAppointmentParams) {
   try {
@@ -38,7 +39,12 @@ export async function updateAppointment(data: UpdateAppointmentParams) {
       throw new Error("Appointment not found");
     }
 
-    // SMS notification
+    const smsMessage =
+      data.appointment.status === "scheduled"
+        ? `Hi, it's CarePulse. Your appointment has been scheduled ${formatDateTime(data.appointment.schedule).dateTime}.`
+        : `Hi, it's CarePulse. We regret to inform you that your appointment has been cancelled. Reason: ${data.appointment.reason}`;
+
+    await sendSMSNotification(data.userId, smsMessage);
 
     revalidatePath("/admin");
     return parseStringify(appointment);
@@ -99,6 +105,20 @@ export async function getRecentAppointmentsList() {
       total: appointments.total,
       rows: appointments.rows,
     });
+  } catch (error: unknown) {
+    console.log(error);
+  }
+}
+
+export async function sendSMSNotification(userId: string, content: string) {
+  try {
+    const message = await messaging.createSMS({
+      messageId: ID.unique(),
+      content,
+      users: [userId],
+    });
+
+    return parseStringify(message);
   } catch (error: unknown) {
     console.log(error);
   }
