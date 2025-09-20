@@ -1,10 +1,12 @@
 "use server";
 
 import {ID, Query} from "node-appwrite";
+import {revalidatePath} from "next/cache";
 import {
   APPOINTMENT_COLLECTION_ID,
   DATABASE_ID,
   databases,
+  tablesDB,
 } from "@/lib/appwrite.config";
 import {parseStringify} from "@/lib/utils";
 
@@ -23,6 +25,28 @@ export async function createAppointment(data: CreateAppointmentParams) {
   }
 }
 
+export async function updateAppointment(data: UpdateAppointmentParams) {
+  try {
+    const appointment = await tablesDB.updateRow({
+      databaseId: DATABASE_ID,
+      tableId: APPOINTMENT_COLLECTION_ID,
+      rowId: data.appointmentId,
+      data: data.appointment,
+    });
+
+    if (!appointment) {
+      throw new Error("Appointment not found");
+    }
+
+    // SMS notification
+
+    revalidatePath("/admin");
+    return parseStringify(appointment);
+  } catch (error: unknown) {
+    console.log(error);
+  }
+}
+
 export async function getAppointment(appointmentId: string) {
   try {
     const patients = await databases.listDocuments({
@@ -32,6 +56,49 @@ export async function getAppointment(appointmentId: string) {
     });
 
     return parseStringify(patients.documents[0]);
+  } catch (error: unknown) {
+    console.log(error);
+  }
+}
+
+export async function getRecentAppointmentsList() {
+  try {
+    const appointments = await tablesDB.listRows({
+      databaseId: DATABASE_ID,
+      tableId: APPOINTMENT_COLLECTION_ID,
+      queries: [
+        Query.orderDesc("$createdAt"),
+        Query.select(["*", "patient.*"]),
+      ],
+    });
+
+    const initialCounts = {
+      scheduled: 0,
+      pending: 0,
+      cancelled: 0,
+      total: appointments.rows.length,
+    };
+    const counts = appointments.rows.reduce((memo, appointment) => {
+      if (appointment.status === "scheduled") {
+        memo.scheduled++;
+      }
+
+      if (appointment.status === "pending") {
+        memo.pending++;
+      }
+
+      if (appointment.status === "cancelled") {
+        memo.cancelled++;
+      }
+
+      return memo;
+    }, initialCounts);
+
+    return parseStringify({
+      ...counts,
+      total: appointments.total,
+      rows: appointments.rows,
+    });
   } catch (error: unknown) {
     console.log(error);
   }
