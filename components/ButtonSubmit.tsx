@@ -18,7 +18,7 @@ export function FormButton(props: FormButtonProps) {
       {loading && (
         <div className="flex items-center gap-4">
           <Image
-            src="/assets/icons/loading.svg"
+            src="/assets/icons/loader.svg"
             alt="spinner"
             width={24}
             height={24}
