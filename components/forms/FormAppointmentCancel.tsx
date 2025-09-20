@@ -12,6 +12,7 @@ import {FormField, FormFieldType} from "@/components/FormField";
 import {FormButton} from "@/components/ButtonSubmit";
 
 type FormAppointmentCancelProps = {
+  userId: string;
   appointmentId: string;
   data: Appointment;
   onSuccess: () => void;
@@ -28,6 +29,7 @@ export function FormAppointmentCancel(props: FormAppointmentCancelProps) {
   const handleSubmit = async (values: FormValues) => {
     try {
       const appointmentData = {
+        userId: props.userId,
         appointmentId: props.appointmentId,
         appointment: {
           primaryPhysician: "",

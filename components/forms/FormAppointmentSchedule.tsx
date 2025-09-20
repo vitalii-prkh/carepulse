@@ -14,6 +14,7 @@ import {FieldsRow} from "@/components/FieldsRow";
 import {FormButton} from "@/components/ButtonSubmit";
 
 type FormAppointmentScheduleProps = {
+  userId: string;
   appointmentId: string;
   data: Appointment;
   onSuccess: () => void;
@@ -33,6 +34,7 @@ export function FormAppointmentSchedule(props: FormAppointmentScheduleProps) {
   const handleSubmit = async (values: FormValues) => {
     try {
       const appointmentData = {
+        userId: props.userId,
         appointmentId: props.appointmentId,
         appointment: {
           primaryPhysician: values.primaryPhysician,

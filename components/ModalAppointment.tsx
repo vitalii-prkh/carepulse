@@ -15,6 +15,7 @@ import {FormAppointmentCancel} from "@/components/forms/FormAppointmentCancel";
 
 type ModalAppointmentProps = {
   type: "schedule" | "cancel";
+  userId: string;
   appointmentId: string;
   data: Appointment;
 };
@@ -48,6 +49,7 @@ export function ModalAppointment(props: ModalAppointmentProps) {
         </DialogHeader>
         {props.type === "schedule" && (
           <FormAppointmentSchedule
+            userId={props.userId}
             appointmentId={props.appointmentId}
             data={props.data}
             onSuccess={() => setOpen(false)}
@@ -55,6 +57,7 @@ export function ModalAppointment(props: ModalAppointmentProps) {
         )}
         {props.type === "cancel" && (
           <FormAppointmentCancel
+            userId={props.userId}
             appointmentId={props.appointmentId}
             data={props.data}
             onSuccess={() => setOpen(false)}
