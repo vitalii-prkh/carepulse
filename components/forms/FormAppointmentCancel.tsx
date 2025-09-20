@@ -2,58 +2,50 @@
 
 import React from "react";
 import {useForm} from "react-hook-form";
-import {useRouter} from "next/navigation";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {formApptCreateSchema} from "@/lib/validation";
-import {createAppointment} from "@/lib/actions/appointment.actions";
+import {formApptCancelSchema} from "@/lib/validation";
+import {updateAppointment} from "@/lib/actions/appointment.actions";
+import {Appointment} from "@/types/appwrite.types";
 import {Form} from "@/components/ui/form";
 import {FormField, FormFieldType} from "@/components/FormField";
 import {FormButton} from "@/components/ButtonSubmit";
 
 type FormAppointmentProps = {
-  userId: string;
-  patientId: string;
+  appointmentId: string;
+  data: Appointment;
+  onSuccess: () => void;
 };
 
 export function FormAppointmentCancel(props: FormAppointmentProps) {
-  const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-  const form = useForm<z.infer<typeof formApptCreateSchema>>({
+  const form = useForm<z.infer<typeof formApptCancelSchema>>({
     defaultValues: {
-      primaryPhysician: "",
-      schedule: "",
-      reason: "",
-      note: "",
+      cancellationReason: "",
     },
-    resolver: zodResolver(formApptCreateSchema),
+    resolver: zodResolver(formApptCancelSchema),
   });
-
-  const handleSubmit = async (values: z.infer<typeof formApptCreateSchema>) => {
-    setLoading(true);
-
+  const handleSubmit = async (values: z.infer<typeof formApptCancelSchema>) => {
     try {
       const appointmentData = {
-        userId: props.userId,
-        patient: props.patientId,
-        primaryPhysician: values.primaryPhysician,
-        schedule: values.schedule,
-        reason: values.reason,
-        note: values.note,
-        status: "pending" as Status,
+        appointmentId: props.appointmentId,
+        appointment: {
+          primaryPhysician: "",
+          schedule: "",
+          reason: "",
+          note: "",
+          cancellationReason: values.cancellationReason,
+          status: "cancelled" as Status,
+        },
       };
 
-      const appointment = await createAppointment(appointmentData);
+      const appointment = await updateAppointment(appointmentData);
 
       if (appointment) {
+        props.onSuccess();
         form.reset();
-        router.push(
-          `/patients/${props.userId}/appointment/success?appointmentId=${appointment.$id}`,
-        );
       }
     } catch (error) {
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -63,22 +55,16 @@ export function FormAppointmentCancel(props: FormAppointmentProps) {
         onSubmit={form.handleSubmit(handleSubmit)}
         className="flex-1 space-y-6"
       >
-        <section className="mb-12 space-y-4">
-          <h1 className="header">New Appointment</h1>
-          <p className="text-dark-700">
-            Request a new appointment in 10 seconds
-          </p>
-        </section>
         <FormField
           control={form.control}
           fieldType={FormFieldType.TEXTAREA}
           name="cancellationReason"
-          label="Reason for ccancellation"
+          label="Reason for cancellation"
           placeholder="Enter reason for cancellation"
         />
         <FormButton
-          loading={loading}
-          disabled={loading}
+          loading={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || !form.formState.isDirty}
           className="shad-danger-btn w-full"
         >
           Cancel Appointment
