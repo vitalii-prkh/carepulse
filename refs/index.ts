@@ -107,3 +107,9 @@ export const IDENTIFICATIONS = [
     label: "Voter ID Card",
   },
 ];
+
+export const ICON_STATUS = {
+  scheduled: "/assets/icons/check.svg",
+  pending: "/assets/icons/pending.svg",
+  cancelled: "/assets/icons/cancelled.svg",
+} as const;
