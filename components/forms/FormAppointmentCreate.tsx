@@ -14,14 +14,12 @@ import {FieldsRow} from "@/components/FieldsRow";
 import {FormButton} from "@/components/ButtonSubmit";
 
 type FormAppointmentProps = {
-  type: "create" | "schedule";
   userId: string;
   patientId: string;
 };
 
 export function FormAppointmentCreate(props: FormAppointmentProps) {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
   const form = useForm<z.infer<typeof formApptCreateSchema>>({
     defaultValues: {
       primaryPhysician: "",
@@ -33,8 +31,6 @@ export function FormAppointmentCreate(props: FormAppointmentProps) {
   });
 
   const handleSubmit = async (values: z.infer<typeof formApptCreateSchema>) => {
-    setLoading(true);
-
     try {
       const appointmentData = {
         userId: props.userId,
@@ -55,8 +51,7 @@ export function FormAppointmentCreate(props: FormAppointmentProps) {
         );
       }
     } catch (error) {
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -105,13 +100,11 @@ export function FormAppointmentCreate(props: FormAppointmentProps) {
           />
         </FieldsRow>
         <FormButton
-          loading={loading}
-          disabled={loading}
+          loading={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || !form.formState.isDirty}
           className="shad-primary-btn w-full"
         >
-          {props.type === "schedule"
-            ? "Schedule Appointment"
-            : "Create Appointment"}
+          Create Appointment
         </FormButton>
       </form>
     </Form>

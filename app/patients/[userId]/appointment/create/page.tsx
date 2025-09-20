@@ -1,10 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import {getPatient} from "@/lib/actions/patient.actions";
 import {FormAppointmentCreate} from "@/components/forms/FormAppointmentCreate";
 
-async function PageAppointmentCreate(props: {
+type PageAppointmentCreateProps = {
   params: Promise<{userId: string}>;
-}) {
+};
+
+async function PageAppointmentCreate(props: PageAppointmentCreateProps) {
   const params = await props.params;
   const patient = await getPatient(params.userId);
 
@@ -12,15 +15,16 @@ async function PageAppointmentCreate(props: {
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[860px] flex-1 justify-between">
-          <Image
-            src="/assets/icons/logo-full.svg"
-            alt="patient"
-            width={1000}
-            height={1000}
-            className="mb-12 h-10 w-fit"
-          />
+          <Link href="/">
+            <Image
+              src="/assets/icons/logo-full.svg"
+              alt="patient"
+              width={1000}
+              height={1000}
+              className="mb-12 h-10 w-fit"
+            />
+          </Link>
           <FormAppointmentCreate
-            type="schedule"
             userId={params.userId}
             patientId={patient.$id}
           />
