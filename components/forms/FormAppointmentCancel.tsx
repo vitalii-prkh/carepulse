@@ -11,20 +11,21 @@ import {Form} from "@/components/ui/form";
 import {FormField, FormFieldType} from "@/components/FormField";
 import {FormButton} from "@/components/ButtonSubmit";
 
-type FormAppointmentProps = {
+type FormAppointmentCancelProps = {
   appointmentId: string;
   data: Appointment;
   onSuccess: () => void;
 };
+type FormValues = z.infer<typeof formApptCancelSchema>;
 
-export function FormAppointmentCancel(props: FormAppointmentProps) {
-  const form = useForm<z.infer<typeof formApptCancelSchema>>({
+export function FormAppointmentCancel(props: FormAppointmentCancelProps) {
+  const form = useForm<FormValues>({
     defaultValues: {
       cancellationReason: "",
     },
     resolver: zodResolver(formApptCancelSchema),
   });
-  const handleSubmit = async (values: z.infer<typeof formApptCancelSchema>) => {
+  const handleSubmit = async (values: FormValues) => {
     try {
       const appointmentData = {
         appointmentId: props.appointmentId,
@@ -64,7 +65,7 @@ export function FormAppointmentCancel(props: FormAppointmentProps) {
         />
         <FormButton
           loading={form.formState.isSubmitting}
-          disabled={form.formState.isSubmitting || !form.formState.isDirty}
+          disabled={form.formState.isSubmitting}
           className="shad-danger-btn w-full"
         >
           Cancel Appointment

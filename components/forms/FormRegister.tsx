@@ -14,10 +14,14 @@ import {FormButton} from "@/components/ButtonSubmit";
 import {FormLegend} from "@/components/FormLegend";
 import {FieldsRow} from "@/components/FieldsRow";
 
-export function FormRegister(props: {user: User}) {
+type FormRegisterProps = {
+  user: User;
+};
+type FormValues = z.infer<typeof formPatientSchema>;
+
+export function FormRegister(props: FormRegisterProps) {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-  const form = useForm<z.infer<typeof formPatientSchema>>({
+  const form = useForm<FormValues>({
     defaultValues: {
       name: "",
       email: "",
@@ -44,10 +48,7 @@ export function FormRegister(props: {user: User}) {
     },
     resolver: zodResolver(formPatientSchema),
   });
-
-  const handleSubmit = async (values: z.infer<typeof formPatientSchema>) => {
-    setLoading(true);
-
+  const handleSubmit = async (values: FormValues) => {
     let formData;
 
     if (
@@ -75,8 +76,7 @@ export function FormRegister(props: {user: User}) {
         router.push(`/patients/${props.user.$id}/appointment/create`);
       }
     } catch (error) {
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -259,8 +259,8 @@ export function FormRegister(props: {user: User}) {
           label="I consent to privacy policy"
         />
         <FormButton
-          loading={loading}
-          disabled={loading}
+          loading={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting}
         >
           Get Started
         </FormButton>

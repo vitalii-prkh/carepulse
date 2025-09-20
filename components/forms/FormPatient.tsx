@@ -16,11 +16,11 @@ const formSchema = formPatientSchema.pick({
   email: true,
   phone: true,
 });
+type FormValues = z.infer<typeof formSchema>;
 
 export function FormPatient() {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-  const form = useForm({
+  const form = useForm<FormValues>({
     defaultValues: {
       name: "",
       email: "",
@@ -28,10 +28,7 @@ export function FormPatient() {
     },
     resolver: zodResolver(formSchema),
   });
-
-  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
-
+  const handleSubmit = async (values: FormValues) => {
     try {
       const user = await createUser(values);
 
@@ -39,8 +36,7 @@ export function FormPatient() {
         router.push(`/patients/${user.$id}/registration`);
       }
     } catch (error) {
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -82,8 +78,8 @@ export function FormPatient() {
           iconAlt="email"
         />
         <FormButton
-          loading={loading}
-          disabled={loading}
+          loading={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting}
         >
           Get Started
         </FormButton>
